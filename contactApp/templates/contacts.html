@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Contact List{% endblock %}
+{% block body %}
+<i class="fa-solid fa-user" style="color: #ffffff; font-size: 5vw;"></i><i id="title">Contacts</i>
+<div id="main">
+
+    <div id="contacts">
+     <div class="alert" id="notify"></div>
+        <ul id="contact-list">
+
+        </ul>
+    </div>
+    <button id="addContactbtn" type="button">Add Contact</button>
+</div>
+<script>
+function contactList() {
+    fetch('/contacts')
+        .then(response => response.json())
+        .then(Data => {
+            if(Data === "login again"){
+                window.location.href="/login"}
+            const contactList = document.getElementById('contact-list');
+            Data.forEach(contact => {
+                const li = document.createElement('li');
+                li.id = `contact-${contact[0]}`;
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'contact-name';
+                nameSpan.textContent = contact[2];
+
+                const rightmostSpan = document.createElement('span');
+                rightmostSpan.className = 'rightmost';
+
+                const view = document.createElement('a');
+                view.href = `/contact_details/${contact[0]}`;
+                view.className = 'icon-link';
+                view.innerHTML = '<i class="fa-solid fa-eye" style="color:black;" title="View"></i>';
+
+                const edit = document.createElement('a');
+                edit.href = `/contact_details/${contact[0]}`;
+                edit.className = 'icon-link';
+                edit.innerHTML = '<i class="fa-solid fa-pen" style="color:black;" title="Edit"></i>';
+
+                const form = document.createElement('form');
+                form.action = `/remove_contact/${contact[0]}`;
+                form.method = 'POST';
+                form.style.display = 'inline';
+
+                const removeButton = document.createElement('button');
+                removeButton.type = 'submit';
+                removeButton.className = 'icon-link';
+                removeButton.style.background = 'none';
+                removeButton.style.border = 'none';
+                removeButton.style.cursor = 'pointer';
+                removeButton.style.color = 'black';
+                removeButton.id = `trash-${contact[0]}`;
+                removeButton.innerHTML = '<i class="fa-solid fa-trash" title="Remove"></i>';
+
+                form.appendChild(removeButton);
+                rightmostSpan.appendChild(form);
+                rightmostSpan.appendChild(view);
+                rightmostSpan.appendChild(edit);
+
+
+                li.appendChild(nameSpan);
+                li.appendChild(rightmostSpan);
+
+                contactList.appendChild(li);
+            });
+        })
+        .catch(error => console.error('Error fetching contacts:', error));
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const btn = document.getElementById("addContactbtn");
+    const trash=document.getElementById("trash");
+    contactList()
+    btn.addEventListener("click", function() {
+        window.location.href = "/contacts/add";
+    });
+    trash.addEventListener("click", function() {
+        fetch('/contacts/remove/<int:contact_id>')
+          .then(response => response.json())
+        .then(Data => {
+        if(Data === "login again")
+        {
+            window.location.href='/login';
+        }
+        if(Data === "contact removed successfully")
+        {
+            window.location.href='/contacts';
+            alert('contact removed successfully');
+
+        }
+
+        })
+    });
+});
+</script>
+{% endblock %}

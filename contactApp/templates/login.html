@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}login{% endblock %}
+{% block content %}
+<div id="main">
+    <div id="sub">
+        <br><br><br>
+        <p id="title">Please enter login credentials<br> to view contact list.</p>
+        <br>
+        <div class="alert" id="warn"></div>
+        <form id="frm">
+            <input placeholder="enter your email" type="email" id="email" name="email" required>
+            <br>
+            <input placeholder="enter your password" type="password" id="password" name="password" required>
+            <br>
+            <button type="button" onclick="checkSuccessLogin()" id="submitUserCredentials">Submit</button>
+        </form>
+    </div>
+</div>
+<script>
+    function checkSuccessLogin() {
+        const form = document.getElementById('frm');
+        const formData = new FormData(form);
+
+        fetch('/login', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data === "Logged in successfully") {
+                window.location.href = "/contacts";
+            } else {
+                document.getElementById("warn").innerHTML = "Warning: " + data;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Add Contact{% endblock %}
+{% block body %}
+<i class="fa-solid fa-user" style="color: #ffffff;font-size:5vw;"></i>
+<div id="main">
+
+    <div id="sub">
+
+                    <div class="alert" id="errors">
+
+                    </div>
+
+        <br><br>
+        <p id="title">Create new Contact</p>
+  <form method="POST">
+        <input type="text" id="full_name" name="full_name" required placeholder="Full Name"><br>
+        <input type="email" id="email" name="email"  placeholder="Email"><br>
+        <input type="text" id="phone_number" name="phone_number" required placeholder="Phone Number (e.g., +1 234-567-890)"><br>
+        <button onclick="addContact()" id="saveNewContact">Add Contact</button>
+        <button type="button" id="returnToContacts">Return to Contact List</button>
+    </form>
+    </div>
+</div>
+<script>
+function addContact(){
+    fetch('/contacts/add')
+        .then(response => response.json())
+        .then(Data => {
+            if(Data === "login again") {
+                window.location.href = "/login";
+            }
+            if(Data === "Email address is not unique"){
+            document.getElementById('errors').innerHTML= "Email address is not unique";
+            window.location.href="/contacts/add";
+            }
+            if(Data === "Phone number is not valid")
+            {
+                document.getElementById('errors').innerHTML= "Phone number is not valid";
+                 window.location.href="/contacts/add";
+            }
+            if(Data === "Phone number is already registered for another contact")
+            {
+                document.getElementById('errors')
+                window.location.href="/contacts/add";
+            }
+            if(Data === "contact added successfully")
+            {
+                window.location.href="/contacts"
+                alert("contact added successfully");
+            }
+        });
+        }
+
+document.addEventListener("DOMContentLoaded", function() {
+    const returnBtn = document.getElementById("returnToContacts");
+
+    returnBtn.addEventListener("click", function () {
+        window.location.href = "/contacts";
+    })
+})
+</script>
+{% endblock %}
