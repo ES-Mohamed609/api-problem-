@@ -22,6 +22,10 @@
     </div>
 </div>
 <script>
+'''The fetch function in addContact should use the POST method for form submission.Error messages should be properly handled and displayed in the errors div.
+    Redirects should be handled after displaying error messages.'''
+   # The addContact function should prevent the form's default submission behavior.
+    
 function addContact(){
     fetch('/contacts/add')
         .then(response => response.json())
