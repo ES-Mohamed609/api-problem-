@@ -4,6 +4,9 @@ from utils.validations import is_email_unique, validate_phone_number, is_phone_n
 
 add_contactsBp = Blueprint('add_contactsBp', __name__)
 
+#Response Messages:
+
+#Returning plain strings in JSON responses is not a good practice. Use structured JSON responses.
 
 @add_contactsBp.route('/contacts/add', methods=['GET', 'POST'])
 def add_contact():
