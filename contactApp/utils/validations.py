@@ -2,7 +2,7 @@ from phonenumbers import is_valid_number, NumberParseException, parse
 
 from utils.connectionSetup import get_db_connection
 
-
+#Connections and cursors should be closed after operations to avoid potential resource leaks.
 def is_email_unique(email):
     conn = get_db_connection()
     cur = conn.cursor()
